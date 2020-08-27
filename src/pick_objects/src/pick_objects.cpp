@@ -57,12 +57,11 @@ int main(int argc, char** argv){
         ROS_INFO("Robot reached the drop off zone");
         ros::Duration(5.0).sleep();
     }
-  else
-  {
-     ROS_INFO("Robot failed to reach Drop off location for some reason");
+    else
+    {
+      ROS_INFO("Robot failed to reach Drop off location for some reason");
+    }
   }
-   }
-}
   else
     ROS_INFO("Robot failed to reached pickup zone  for some reason");
 
