@@ -6,6 +6,13 @@ find_package(catkin REQUIRED COMPONENTS
   visualization_msgs
 )
 
+catkin_package(
+#  INCLUDE_DIRS include
+#  LIBRARIES pick_objects
+#  CATKIN_DEPENDS actionlib move_base_msgs roscpp
+#  DEPENDS system_lib
+)
+
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
