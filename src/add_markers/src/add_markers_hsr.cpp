@@ -5,7 +5,8 @@
 
 using std::fabs;
 
-#define EPSILON 0.1f
+#define EPSILON 0.25f
+#define EPSILON_ROUGH 0.4f
 
 typedef struct 
 {
@@ -14,11 +15,11 @@ typedef struct
 }pos;
 
 /* set pickup and dropoff position */
-static pos pick{3.0, -4.0};
-static pos drop{-5.0, 3.5};
+static pos pick = {3.0, -4.0};
+static pos drop = {-5.0, 3.5};
 
-static bool reach_pickup;
-static bool reach_dropoff;
+static bool objec_picked;
+static bool objec_droped;
 
 void robot_pos_check(const nav_msgs::Odometry::ConstPtr &odom);
 
@@ -68,6 +69,7 @@ int main( int argc, char** argv )
 
     marker.lifetime = ros::Duration();
 
+    ROS_INFO("Execute location monition program.");
     // Publish the marker
     while (marker_pub.getNumSubscribers() < 1)
     {
@@ -78,60 +80,59 @@ int main( int argc, char** argv )
       ROS_WARN_ONCE("Please create a subscriber to the marker");
       sleep(1);
     }
-
-    while (reach_dropoff != true)
+    
+    bool new_mark_set = false;
+    while (objec_droped != true)
     { 
       ros::spinOnce();
       /* Publish the first marker at the pickup zone */
-      ROS_INFO("Pick up the object");
+      //ROS_INFO("Pick up the object %d",objec_picked);
       marker_pub.publish(marker);
     
-      if(reach_pickup == true)
+      if(objec_picked == true && new_mark_set == false)
       {
       /* Delete marker */
       ROS_INFO("Object picked");
       marker.action = visualization_msgs::Marker::DELETE;
       marker_pub.publish(marker);
+      new_mark_set = true;
+      ROS_INFO("Transporting");
+      }    
+    }
+    if(objec_droped == true)
+    {
       /* set the second marker at the dropoff zone */
       marker.pose.position.x = drop.x;
       marker.pose.position.y = drop.y;
-      ROS_INFO("Transporting");
-      }
-
-      if(reach_dropoff == true)
-      {
-          marker.action = visualization_msgs::Marker::ADD;
-          marker_pub.publish(marker);
-          ROS_INFO("Object delivered"); 
-      }    
+      marker.action = visualization_msgs::Marker::ADD;
+      marker_pub.publish(marker);
+      ROS_INFO("Object delivered"); 
     }
-    return 0;
+    //return 0;
+    r.sleep();
   }
 }
 
 void robot_pos_check(const nav_msgs::Odometry::ConstPtr &odom)
 {
-    float robot_x =  pose.pose.position.x;
-    float robot_y =  pose.pose.position.y;
+    float robot_x =  odom->pose.pose.position.x;
+    float robot_y =  odom->pose.pose.position.y;
 
     float diff_x_pick = fabs(robot_x - pick.x);
-    float diff_y_ pick = fabs(robot_y - pick.y);
+    float diff_y_pick = fabs(robot_y - pick.y);
     float diff_x_drop = fabs(robot_x - drop.x);
-    float diff_y_ drop = fabs(robot_y - drop.y);
+    float diff_y_drop = fabs(robot_y - drop.y);
 
-    if( diff_x_pick  < = EPSILON && diff_y_pick  < = EPSILON )
+    //ROS_INFO("diff_x_pick: %4f,diff_y_pick: %4f ",diff_x_pick, diff_y_pick); /* for debug */
+    //ROS_INFO("diff_x_drop: %4f,diff_y_drop: %4f ",diff_x_drop, diff_y_drop); /* for debug */
+
+    if( objec_picked == false && diff_x_pick  <= EPSILON && diff_y_pick  <= EPSILON )
     {
-      reach_pickup = true;
-      reach_dropoff = false;
+      objec_picked = true;
     }
-    else if( diff_x_drop  < = EPSILON && diff_y_drop  < = EPSILON )
+    else if( objec_picked == true && diff_x_drop  <= EPSILON_ROUGH && diff_y_drop  <= EPSILON_ROUGH )
     {
-      reach_pickup = false;
-      reach_dropoff = true;
+      objec_droped = true;
     }
-     else
-     {
-        reach_pickup = false;
-        reach_dropoff = false;
-     }    
+   
 }

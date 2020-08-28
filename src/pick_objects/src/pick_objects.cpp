@@ -29,7 +29,8 @@ int main(int argc, char** argv){
   goal.target_pose.pose.orientation.w = -1.5707;
 
    // Send the goal position and orientation for the robot to reach
-  ROS_INFO("Sending pickup zone info");
+  ROS_INFO("Sending pickup zone info, buffer 3 seconds");
+  ros::Duration(5.0).sleep();
   ac.sendGoal(goal);
 
   // Wait an infinite time for the results
