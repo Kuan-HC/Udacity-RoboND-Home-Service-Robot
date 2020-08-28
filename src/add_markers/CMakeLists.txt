@@ -19,7 +19,9 @@ include_directories(
 )
 
 add_executable(add_markers src/add_markers.cpp)
-
 target_link_libraries(add_markers ${catkin_LIBRARIES})
+
+add_executable(add_markers_hsr src/add_markers_hsr.cpp)
+target_link_libraries(add_markers_hsr ${catkin_LIBRARIES})
 
 

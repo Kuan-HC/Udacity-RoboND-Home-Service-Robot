@@ -3,7 +3,7 @@
 
 int main( int argc, char** argv )
 {
-  ros::init(argc, argv, "add_markers");
+  ros::init(argc, argv, "add_markers_hsr");
   ros::NodeHandle n;
   ros::Rate r(1);
   ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
@@ -77,9 +77,7 @@ int main( int argc, char** argv )
     marker.pose.position.y = 3.5;
     marker.action = visualization_msgs::Marker::ADD;
     marker_pub.publish(marker);
-    ROS_INFO("Second marker at dropoff zone");  
-    ros::Duration(5.0).sleep();  
-    ROS_INFO("Program finished!");
+    ROS_INFO("Second marker at dropoff zone");    
 
     return 0;
   }
