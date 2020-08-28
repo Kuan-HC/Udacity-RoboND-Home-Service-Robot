@@ -6,7 +6,7 @@
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 int main(int argc, char** argv){
-  // Initialize the pick_objects node
+  // Initialize the simple_navigation_goals node
   ros::init(argc, argv, "pick_objects");
 
   //tell the action client that we want to spin a thread by default
@@ -24,12 +24,12 @@ int main(int argc, char** argv){
   goal.target_pose.header.stamp = ros::Time::now();
 
   // Define a position and orientation for the robot to reach
-  goal.target_pose.pose.position.x = 5.0;
-  goal.target_pose.pose.orientation.w = 1.0;
-  goal.target_pose.pose.orientation.w = 0.0;
+  goal.target_pose.pose.position.x = 3.0;
+  goal.target_pose.pose.position.y = -4.0;
+  goal.target_pose.pose.orientation.w = -1.5707;
 
    // Send the goal position and orientation for the robot to reach
-  ROS_INFO("Sending pickup zone");
+  ROS_INFO("Sending pickup zone info");
   ac.sendGoal(goal);
 
   // Wait an infinite time for the results
@@ -38,32 +38,24 @@ int main(int argc, char** argv){
   // Check if the robot reached its goal
   if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
   {
-    ROS_INFO("Robot reached the pickup zone");
+    ROS_INFO("Robot reached pickup zone");
+    ROS_INFO("Pause 5 seconds!");
     ros::Duration(5.0).sleep();
-
-    // Define a drop off zone position and orientation for the robot to reach
-    goal.target_pose.pose.position.x = -7.0;
-    goal.target_pose.pose.orientation.w = 1.0;
+    ROS_INFO("Sending dropoff zone info");
+    goal.target_pose.pose.position.x = -5.0;
+    goal.target_pose.pose.position.y = 3.5;
     goal.target_pose.pose.orientation.w = 1.5707;
-
-    // Send the goal position and orientation for the robot to reach
-    ROS_INFO("Sending drop off zone");
     ac.sendGoal(goal);
+
     // Wait an infinite time for the results
     ac.waitForResult();
-
     if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-    {
-        ROS_INFO("Robot reached the drop off zone");
-        ros::Duration(5.0).sleep();
-    }
+      ROS_INFO("Robot reached dropoff zone");
     else
-    {
-      ROS_INFO("Robot failed to reach Drop off location for some reason");
-    }
+      ROS_INFO("Robot failed to reach dropoff zone for some reason");
   }
   else
-    ROS_INFO("Robot failed to reached pickup zone  for some reason");
+    ROS_INFO("Robot failed to reach pickup zone for some reason");
 
   return 0;
 }
