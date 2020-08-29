@@ -30,18 +30,18 @@ open project in terminal
 ### Mapping
 <img src="image/slam_test.gif" width = "600"/>
 
+0. Modify ``.world`` path in shell file  
 1. Open ``Udacity-RoboND-Home-Service-Robot/Shell`` in Terminal  
-
 2. give it ``execute`` pemission by ``chmod +x test_slam.sh``  
-
 3. ``./test_slam.sh``  
-
 4. generated pgm file:  
 
 <img src="image/slam_pgm.png" width = "300"/>
 
 ### Localization and Navigation
 <img src="image/pickup.gif" width = "600"/>  
+
+0. Modify ``.world``and ``pgm`` path in shell file    
 
 1. Open ``Udacity-RoboND-Home-Service-Robot/Shell`` in Terminal  
 
@@ -53,14 +53,16 @@ open project in terminal
 #### Add Markers 
 <img src="image/add_markers.gif" width = "300"/>  
 
+0. Modify ``.world``and ``pgm`` path in shell file    
+
 1. Open ``Udacity-RoboND-Home-Service-Robot/Shell`` in Terminal  
-
 2. give it ``execute`` pemission by ``chmod +x add_markers.sh``  
-
 3. ``./add_markers.sh``  
 
 #### Home Service  
 <img src="image/cover_hsr.gif" width = "300"/>  
+
+0. Modify ``.world``and ``pgm`` path in shell file    
 
 1. give it ``execute`` pemission by ``chmod +x home_service.sh``  
 2. ``./home_servicem.sh``  
