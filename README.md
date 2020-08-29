@@ -3,12 +3,10 @@
 
 This project was developed on Ubuntu 16.04 LTS with ROS Kinetic, Gazebo and catkin installed.
 
-## Dependencies
-* xterm  
-``sudo apt-get install xterm``  
-  
 ## Preliminary Steps
 1. clone this project  
+This project requires following ROS packages: ``turtlebot_gazebo``, ``gmapping`` , ``turtlebot_rviz_launchers`` and ``turtlebot_teleop`` 
+Those ROS packages are added as submodules, follow steps below to initialize.
 2. submodule initialization  
   ``git submodule init``  
 3. submodule update  
@@ -17,6 +15,17 @@ This project was developed on Ubuntu 16.04 LTS with ROS Kinetic, Gazebo and catk
   ``catkin_make``  
 5. switch pkg``slam_gmapping`` branch to ``hydro-devel``
   ``git checkout -b hydro-devel origin/hydro-devel`` 
+  
+ ## Dependencies
+* xterm  
+``sudo apt-get install xterm``  
+* ROS packages
+open project in terminal  
+``source devel/setup.bash``  
+``rosdep -i install turtlebot_gazebo``  
+``rosdep -i install gmapping``  
+``rosdep -i install turtlebot_rviz_launchers``  
+``rosdep -i install turtlebot_teleop``  
 
 ### Mapping
 <img src="image/slam_test.gif" width = "600"/>
@@ -57,4 +66,15 @@ This project was developed on Ubuntu 16.04 LTS with ROS Kinetic, Gazebo and catk
 2. ``./home_servicem.sh``  
 * ``home_servicem.sh`` launches ``turtlebot``, ``AMCL``, ``rviz``, ``pcik_objects`` and ``add_markers_hsr`` nodes  
 * rviz config file: ``home_service.rviz`` modifiy it path in ``/shell/home_service.sh`` line 6  
-
+```
+#!/bin/sh
+xterm  -e  "source devel/setup.bash; roslaunch turtlebot_gazebo turtlebot_world.launch world_file:=/home/workspace/HSR/src/world/my_world.world" &
+sleep 10
+xterm  -e  "source devel/setup.bash; roslaunch turtlebot_gazebo amcl_demo.launch map_file:=/home/workspace/HSR/src/world/map.yaml" & 
+sleep 5
+xterm  -e  "source devel/setup.bash; rosrun rviz rviz -d /home/workspace/Udacity-RoboND-Home-Service-Robot/home_service.rviz" &
+sleep 10
+xterm  -e  "source devel/setup.bash; rosrun add_markers add_markers_hsr" &
+sleep 1
+xterm  -e  "source devel/setup.bash; rosrun pick_objects pick_objects" 
+```
